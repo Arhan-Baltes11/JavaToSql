@@ -6,31 +6,33 @@ import java.sql.Statement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import src.main.java.Database;
+
 public class Main {
     public static void main(String[] args) {
-
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/javatosql", "root", null);
+            Database data = new Database();
+
+            Connection conn = data.establishConnection("jdbc:mysql://localhost:3306/javatosql", "root");
+            Statement state = data.createStatement(conn);
+
             System.out.println("IF you are reading this, a connection has been established!");
-            System.out.println(connection);
+            System.out.println(conn);
+            String all = data.selectAll("typeOne");
+            ResultSet result = data.executeQuery(conn, state, all);
 
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM typeOne");
-
-            while (resultSet.next()) {
-                String name = resultSet.getString("name");
-                int id = resultSet.getInt("id");
+            while (result.next()) {
+                String name = result.getString("name");
+                int id = result.getInt("id");
                 System.out.println("Column Value: " + id + ": " + name);
             }
 
-            resultSet.close();
-            statement.close();
-            connection.close();
+            data.closeAll(conn, state, result);
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        System.out.println("Java To Sql 0.0.1");
+        System.out.println("Java To Sql 0.1.0");
     }
 }
