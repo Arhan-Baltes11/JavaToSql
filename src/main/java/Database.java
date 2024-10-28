@@ -29,13 +29,17 @@ public class Database {
 
     public String select(String[] columns, String table) {
 
-        String columnString = null;
+        String columnString = "SELECT ";
 
-        for (String column : columns) {
-            columnString = columnString + column + ", ";
+        for (int i = 0; i < columns.length; i++) {
+            if (i == columns.length - 1) {
+                columnString = columnString + columns[i];
+            } else {
+                columnString = columnString + columns[i] + ", ";
+            }
         }
 
-        return "SELECT " + columnString + " FROM " + table;
+        return columnString + " FROM " + table;
     }
 
     public String selectAll(String table) {
